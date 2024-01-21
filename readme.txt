@@ -1,5 +1,14 @@
 Boilerplate for Micropython
 
+[read more]
+https://koscis.wordpress.com/tag/microplate/
+
+
+[the same but LUA]
+https://koscis.wordpress.com/tag/nodemcu-boilerplate/
+https://github.com/bkosciow/nodemcu_boilerplate
+
+
 Uses the concept of nodes - each device in network is a node
 
 Node has:
