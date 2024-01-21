@@ -1,0 +1,5 @@
+venv
+.espcache
+config.py
+node_config.py
+esp_sync.py
