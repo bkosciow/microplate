@@ -1,32 +1,46 @@
+from config import *
+from node_config import *
+import microplate.wifi
+
+microplate.wifi.wifi_connect(WIFI)
+
 from microplate.light import LightSensor
 from microplate.hcs_sr501 import MoveSensor
 from microplate.dht11 import DHT11
 from microplate.message import Message
 from microplate.module import ModuleInterface
+from microplate.message_aes_sha1 import Cryptor
+from microplate.listener import Listener
 import time
 import socket
-import microplate.wifi
-from config import *
-from node_config import *
 import uasyncio
 
 Message.node_name = NODE_NAME
-microplate.wifi.wifi_connect(WIFI)
+Message.add_decoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
+Message.add_encoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
 
 print("booting")
 
-ip_address = '0.0.0.0'
-port = 5053
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 s.setblocking(False)
-s.bind((ip_address, port))
+s.bind((BROADCAST_IP, PORT))
 
 ModuleInterface.socket = s
 
+listener = Listener(s)
+
+
+from machine import Pin
+p = Pin(19, Pin.PULL_UP)
+p.value(0)
+
+p = Pin(18, Pin.PULL_UP)
+p.value(0)
 
 def debug_callback(name, data):
+    pass
     print(name, data)
 
 
@@ -36,21 +50,13 @@ light.callback = debug_callback
 pir = MoveSensor(PIN_PIR)
 temp = DHT11(PIN_DHT, 10000)
 
-def callback(data, addr):
-    pass
-    # print(data)
-
-
-async def receive(socket):
-    while True:
-        try:
-            data, addr = socket.recvfrom(1024)
-            callback(data, addr)
-        except OSError as e:
-            if e.errno == 11:
-                pass
-        await uasyncio.sleep(0)
-
+# message = Message()
+# message.set({
+#     'event': 'dht.status',
+#     'parameters': {"humi": 35, "temp": 22},
+#     'targets': ['ALL']
+# })
+# s.sendto(message.bytes(), ADDRESS)
 
 async def main(socket):
     print("starting main loop")
@@ -69,7 +75,6 @@ async def main(socket):
 
 l = uasyncio.get_event_loop()
 l.create_task(main(s))
-l.create_task(receive(s))
+l.create_task(listener.run())
 
 l.run_forever()
-
