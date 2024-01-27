@@ -1,6 +1,7 @@
 from microplate.module import  ModuleInterface
 from machine import Pin
 from microplate.message import Message
+from microplate.broadcast import broadcast
 
 #
 # def debug_callback(name, data):
@@ -36,4 +37,4 @@ class LightSensor(ModuleInterface):
                 "event": "detect.light" if self.data == 0 else "detect.dark",
             }
         )
-        self.broadcast(message)
+        broadcast(message)

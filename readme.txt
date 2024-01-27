@@ -17,8 +17,16 @@ handlers - react to messages
 
 message is a json network packet, encrypted or not
 
-they are two cconfig files:
+they are two config files:
 config.py - common things like network credential
 node_config.py - config only for this device, like node-mane
 
+
+[workers]
+dht11
+light
+pir
+
+[handlers]
+relay
 

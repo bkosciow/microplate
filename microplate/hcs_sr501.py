@@ -1,11 +1,12 @@
 from microplate.module import  ModuleInterface
 from machine import Pin
 from microplate.message import Message
+from microplate.broadcast import broadcast
 
 #
 # def debug_callback(name, data):
 #     print(name, data)
-# pir = MoveSensor(PIN_PIR
+# pir = MoveSensor(PIN_PIR)
 # pir.callback = debug_callback
 #
 
@@ -36,4 +37,4 @@ class MoveSensor(ModuleInterface):
                 "event": "pir.movement" if self.data == 1 else "pir.nomovement",
             }
         )
-        self.broadcast(message)
+        broadcast(message)

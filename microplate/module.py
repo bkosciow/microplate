@@ -1,5 +1,3 @@
-from config import *
-
 
 class ModuleInterface:
     socket = None
@@ -30,9 +28,6 @@ class ModuleInterface:
                 results[idx] = True
 
         return results
-
-    def broadcast(self, message):
-        self.socket.sendto(message.bytes(), ADDRESS)
 
     def action(self):
         raise Exception("define action")

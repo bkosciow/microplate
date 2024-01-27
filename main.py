@@ -12,9 +12,11 @@ from microplate.module import ModuleInterface
 from microplate.message_aes_sha1 import Cryptor
 from microplate.listener import Listener
 from microplate.relay_hanlder import RelayHandler
+from microplate.dht11_handler import Dht11Handler
 import time
 import socket
 import uasyncio
+import microplate.broadcast as broadcast
 
 Message.node_name = NODE_NAME
 Message.add_decoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
@@ -29,6 +31,7 @@ s.setblocking(False)
 s.bind((BROADCAST_IP, PORT))
 
 ModuleInterface.socket = s
+broadcast.socket = s
 
 def debug_callback(name, data):
     pass
@@ -42,8 +45,8 @@ temp = DHT11(PIN_DHT, 3000)
 
 
 listener = Listener(s)
-listener.add_handler("relay", RelayHandler(RELAY, s))
-
+listener.add_handler("relay", RelayHandler(RELAY))
+listener.add_handler("dht11", Dht11Handler(temp))
 
 async def main(socket):
     print("starting main loop")

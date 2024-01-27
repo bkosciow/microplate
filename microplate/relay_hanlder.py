@@ -1,14 +1,13 @@
 from microplate.handler_base import Handler
 from machine import Pin
 from microplate.message import Message
-from config import *
+from microplate.broadcast import broadcast
 
 
 class RelayHandler(Handler):
-    def __init__(self, relays, socket):
+    def __init__(self, relays):
         super().__init__()
         self.relays = []
-        self.socket = socket
         for channel, item in enumerate(relays):
             self.relays.append({
                 'pin': Pin(item['pin'], Pin.OUT, Pin.PULL_UP),
@@ -56,4 +55,4 @@ class RelayHandler(Handler):
 
                 }
             )
-            self.socket.sendto(message.bytes(), ADDRESS)
+            broadcast(message)
