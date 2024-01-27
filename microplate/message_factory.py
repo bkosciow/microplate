@@ -14,11 +14,15 @@ class MessageFactory(object):
     def _decode(cls, message):
         try:
             message = json.loads(message)
+
             if not cls._validate_message(message):
                 return None
             msg = Message()
             msg.set(message)
             msg.decrypt()
+            if message['node'] == "Turkusik":
+                print(message)
+
             return msg
         except ValueError:
             raise

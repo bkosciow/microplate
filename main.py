@@ -11,6 +11,7 @@ from microplate.message import Message
 from microplate.module import ModuleInterface
 from microplate.message_aes_sha1 import Cryptor
 from microplate.listener import Listener
+from microplate.relay_hanlder import RelayHandler
 import time
 import socket
 import uasyncio
@@ -29,34 +30,20 @@ s.bind((BROADCAST_IP, PORT))
 
 ModuleInterface.socket = s
 
-listener = Listener(s)
-
-
-from machine import Pin
-p = Pin(19, Pin.PULL_UP)
-p.value(0)
-
-p = Pin(18, Pin.PULL_UP)
-p.value(0)
-
 def debug_callback(name, data):
     pass
     print(name, data)
-
 
 light = LightSensor(PIN_LIGHT)
 light.callback = debug_callback
 
 pir = MoveSensor(PIN_PIR)
-temp = DHT11(PIN_DHT, 10000)
+temp = DHT11(PIN_DHT, 3000)
 
-# message = Message()
-# message.set({
-#     'event': 'dht.status',
-#     'parameters': {"humi": 35, "temp": 22},
-#     'targets': ['ALL']
-# })
-# s.sendto(message.bytes(), ADDRESS)
+
+listener = Listener(s)
+listener.add_handler("relay", RelayHandler(RELAY, s))
+
 
 async def main(socket):
     print("starting main loop")

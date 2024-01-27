@@ -1,5 +1,59 @@
+from microplate.handler_base import Handler
+from machine import Pin
+from microplate.message import Message
+from config import *
 
 
-class RelayHandler:
-    def __init__(self, relays):
-        self.relays = relays
+class RelayHandler(Handler):
+    def __init__(self, relays, socket):
+        super().__init__()
+        self.relays = []
+        self.socket = socket
+        for channel, item in enumerate(relays):
+            self.relays.append({
+                'pin': Pin(item['pin'], Pin.OUT, Pin.PULL_UP),
+                'enable': 0 if item['enabled'] == 0 else 1,
+                'disable': 1 if item['enabled'] == 0 else 0,
+                'current': item['default']
+            })
+            self.toggle(channel, item['default'])
+
+    def toggle(self, channel, state):
+        if channel < len(self.relays):
+            self.relays[channel]["pin"].value(state)
+            self.relays[channel]["current"] = state
+
+    def disable(self, channel):
+        if channel < len(self.relays):
+            self.toggle(channel, self.relays[channel]["disable"])
+
+    def enable(self, channel):
+        if channel < len(self.relays):
+            self.toggle(channel, self.relays[channel]["enable"])
+
+    def handle(self, message):
+        if 'channel' in message['parameters']:
+            channel = int(message['parameters']['channel'])
+            if message['event'] == "channel.off":
+                self.disable(channel)
+            if message['event'] == "channel.on":
+                self.enable(channel)
+
+        if message['event'] == 'channel.states':
+            ret = []
+            for item in self.relays:
+                state = item["pin"].value()
+                if state == item["enable"]:
+                    state = 1
+                else:
+                    state = 0
+                ret.append(state)
+            message = Message()
+            message.set(
+                {
+                    "event": "channels.response",
+                    "parameters": ret
+
+                }
+            )
+            self.socket.sendto(message.bytes(), ADDRESS)
