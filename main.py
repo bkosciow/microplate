@@ -13,6 +13,8 @@ from microplate.message_aes_sha1 import Cryptor
 from microplate.listener import Listener
 from microplate.relay_hanlder import RelayHandler
 from microplate.dht11_handler import Dht11Handler
+from microplate.light_handler import LightHandler
+from microplate.hcs_sr501_handler import MoveHandler
 import time
 import socket
 import uasyncio
@@ -47,6 +49,8 @@ temp = DHT11(PIN_DHT, 3000)
 listener = Listener(s)
 listener.add_handler("relay", RelayHandler(RELAY))
 listener.add_handler("dht11", Dht11Handler(temp))
+listener.add_handler("light", LightHandler(light))
+listener.add_handler("move", MoveHandler(pir))
 
 async def main(socket):
     print("starting main loop")
