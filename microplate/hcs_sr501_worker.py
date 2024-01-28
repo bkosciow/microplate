@@ -6,22 +6,22 @@ from microplate.broadcast import broadcast
 #
 # def debug_callback(name, data):
 #     print(name, data)
-# light = LightSensor(PIN_LIGHT)
-# light.callback = debug_callback
+# pir = MoveSensor(PIN_PIR)
+# pir.callback = debug_callback
 #
 
 
-class LightSensor(ModuleInterface):
+class MoveWorker(ModuleInterface):
     def __init__(self, pin, tick=200, tick1=10000):
         super().__init__(Pin(pin, Pin.IN), tick)
-        self.light = None
+        self.move = None
         self.add_action(tick1, self.send_action)
-
+        
     def action(self):
         self.data = self.io.value()
-        if self.light != self.data:
+        if self.move != self.data:
             self.send_message()
-            self.light = self.data
+            self.move = self.data
             if self.callback:
                 self.callback('action', self.data)
 
@@ -34,7 +34,7 @@ class LightSensor(ModuleInterface):
         message = Message()
         message.set(
             {
-                "event": "detect.light" if self.data == 0 else "detect.dark",
+                "event": "pir.movement" if self.data == 1 else "pir.nomovement",
             }
         )
         broadcast(message)

@@ -10,6 +10,8 @@ RELAY = [
 WIFI = [
     ["ap_name", "ap_pwd"]
 ]
+BTN_A = 17
+
 PORT = 5053
 ADDRESS = ("192.168.1.255", PORT)
 BROADCAST_IP = '0.0.0.0'

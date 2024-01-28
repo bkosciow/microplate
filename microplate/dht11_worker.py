@@ -9,7 +9,7 @@ from microplate.broadcast import broadcast
 #
 
 
-class DHT11(ModuleInterface):
+class DHT11Worker(ModuleInterface):
     def __init__(self, pin, tick=2000):
         super().__init__(dht.DHT11(Pin(pin)), tick)
 

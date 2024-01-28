@@ -4,9 +4,9 @@ import microplate.wifi
 
 microplate.wifi.wifi_connect(WIFI)
 
-from microplate.light import LightSensor
-from microplate.hcs_sr501 import MoveSensor
-from microplate.dht11 import DHT11
+from microplate.light_worker import LightWorker
+from microplate.hcs_sr501_worker import MoveWorker
+from microplate.dht11_worker import DHT11Worker
 from microplate.message import Message
 from microplate.module import ModuleInterface
 from microplate.message_aes_sha1 import Cryptor
@@ -15,6 +15,7 @@ from microplate.relay_hanlder import RelayHandler
 from microplate.dht11_handler import Dht11Handler
 from microplate.light_handler import LightHandler
 from microplate.hcs_sr501_handler import MoveHandler
+from microplate.button_worker import ButtonWorker
 import time
 import socket
 import uasyncio
@@ -39,18 +40,25 @@ def debug_callback(name, data):
     pass
     print(name, data)
 
-light = LightSensor(PIN_LIGHT)
+
+def click_callback(pin):
+    print("pin : ", pin)
+
+light = LightWorker(PIN_LIGHT)
 light.callback = debug_callback
 
-pir = MoveSensor(PIN_PIR)
-temp = DHT11(PIN_DHT, 3000)
+pir = MoveWorker(PIN_PIR)
+temp = DHT11Worker(PIN_DHT, 3000)
 
+btns = ButtonWorker()
+btns.add_button(BTN_A, 400, click_callback)
 
 listener = Listener(s)
 listener.add_handler("relay", RelayHandler(RELAY))
 listener.add_handler("dht11", Dht11Handler(temp))
 listener.add_handler("light", LightHandler(light))
 listener.add_handler("move", MoveHandler(pir))
+
 
 async def main(socket):
     print("starting main loop")
@@ -60,6 +68,7 @@ async def main(socket):
         light.tick(TICK)
         pir.tick(TICK)
         temp.tick(TICK)
+        btns.tick(TICK)
 
         calculated_tick = TICK - time.ticks_diff(time.ticks_ms(), start)
         if calculated_tick < 0.0:

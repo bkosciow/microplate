@@ -1,4 +1,4 @@
-from microplate.module import  ModuleInterface
+from microplate.module import ModuleInterface
 from machine import Pin
 from microplate.message import Message
 from microplate.broadcast import broadcast
@@ -6,22 +6,22 @@ from microplate.broadcast import broadcast
 #
 # def debug_callback(name, data):
 #     print(name, data)
-# pir = MoveSensor(PIN_PIR)
-# pir.callback = debug_callback
+# light = LightSensor(PIN_LIGHT)
+# light.callback = debug_callback
 #
 
 
-class MoveSensor(ModuleInterface):
+class LightWorker(ModuleInterface):
     def __init__(self, pin, tick=200, tick1=10000):
         super().__init__(Pin(pin, Pin.IN), tick)
-        self.move = None
+        self.light = None
         self.add_action(tick1, self.send_action)
-        
+
     def action(self):
         self.data = self.io.value()
-        if self.move != self.data:
+        if self.light != self.data:
             self.send_message()
-            self.move = self.data
+            self.light = self.data
             if self.callback:
                 self.callback('action', self.data)
 
@@ -34,7 +34,7 @@ class MoveSensor(ModuleInterface):
         message = Message()
         message.set(
             {
-                "event": "pir.movement" if self.data == 1 else "pir.nomovement",
+                "event": "detect.light" if self.data == 0 else "detect.dark",
             }
         )
         broadcast(message)
