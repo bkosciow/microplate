@@ -4,8 +4,8 @@ PIN_LIGHT = 23
 PIN_PIR = 22
 PIN_DHT = 21
 RELAY = [
-    {"pin": 19, "enabled": 0},
-    {"pin": 18, "enabled": 0},
+    {"pin": 19, "enabled": 0, "default": 1},
+    {"pin": 18, "enabled": 0, "default": 0},
 ]
 WIFI = [
     ["ap_name", "ap_pwd"]

@@ -20,8 +20,6 @@ class MessageFactory(object):
             msg = Message()
             msg.set(message)
             msg.decrypt()
-            if message['node'] == "Turkusik":
-                print(message)
 
             return msg
         except ValueError:
