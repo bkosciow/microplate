@@ -35,11 +35,14 @@ class Listener:
             except DecryptNotFound as e:
                 if not self.ignore_missing_decoders:
                     print(str(e))
+                await uasyncio.sleep(0)
             except OSError as e:
-                if e.errno == 11:
-                    pass
+                # if e.errno == 11:
+                await uasyncio.sleep(0)
+
             except Exception as e:
                 print(str(e))
+                await uasyncio.sleep(0)
 
     def serve_message(self, message):
         for handlers in self.handlers:

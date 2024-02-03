@@ -20,8 +20,8 @@ Message.add_encoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-s.setblocking(False)
 s.bind((BROADCAST_IP, PORT))
+s.setblocking(False)
 
 ModuleInterface.socket = s
 broadcast.socket = s
