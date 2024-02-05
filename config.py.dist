@@ -8,8 +8,11 @@ RELAY = [
     {"pin": 18, "enabled": 0, "default": 0},
 ]
 WIFI = [
-    ["ap_name", "ap_pwd"]
+    ["ap_name1", "ap_pwd1"],
+    ["ap_name2", "ap_pwd2"]
 ]
+WIFI_TIMEOUT = 10
+
 BTN_A = 17
 
 PORT = 5053
