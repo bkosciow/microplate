@@ -9,7 +9,7 @@ https://koscis.wordpress.com/tag/nodemcu-boilerplate/
 https://github.com/bkosciow/nodemcu_boilerplate
 
 
-Uses the concept of nodes - each device in network is a node
+Uses the concept of nodes - each device in the network is a node
 
 Node has:
 workers - broadcast some data in messages
@@ -22,11 +22,17 @@ config.py - common things like network credential
 node_config.py - config only for this device, like node-mane
 
 
+
 [workers]
 dht11
 light
 pir
+buttons
+network
 
 [handlers]
 relay
+dht11
+pir
+light
 
