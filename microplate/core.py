@@ -3,7 +3,7 @@ from node_config import *
 import microplate.wifi
 import socket
 
-microplate.wifi.wifi_connect(WIFI)
+microplate.wifi.wifi_connect()
 
 from microplate.message import Message
 from microplate.module import ModuleInterface

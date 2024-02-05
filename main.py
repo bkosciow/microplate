@@ -42,6 +42,6 @@ core.add_handler("relay", RelayHandler(RELAY))
 core.add_handler("dht11", Dht11Handler(temp))
 core.add_handler("light", LightHandler(light))
 core.add_handler("move", MoveHandler(pir))
-core.add_handler("debug", DebugHandler())
+# core.add_handler("debug", DebugHandler())
 
 core.start()
