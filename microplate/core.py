@@ -44,7 +44,10 @@ async def main():
     while True:
         start = time.ticks_ms()
         for item in workers:
-            item.tick(TICK)
+            try:
+                item.tick(TICK)
+            except Exception as e:
+                print(type(item), str(e))
 
         calculated_tick = TICK - time.ticks_diff(time.ticks_ms(), start)
         if calculated_tick < 0.0:
