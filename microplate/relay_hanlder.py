@@ -30,6 +30,25 @@ class RelayHandler(Handler):
         if channel < len(self.relays):
             self.toggle(channel, self.relays[channel]["enable"])
 
+    def broadcast(self):
+        ret = []
+        for item in self.relays:
+            state = item["pin"].value()
+            if state == item["enable"]:
+                state = 1
+            else:
+                state = 0
+            ret.append(state)
+        message = Message()
+        message.set(
+            {
+                "event": "channel.status",
+                "parameters": ret
+
+            }
+        )
+        broadcast(message)
+
     def handle(self, message):
         if 'channel' in message['parameters']:
             channel = int(message['parameters']['channel'])
@@ -37,22 +56,7 @@ class RelayHandler(Handler):
                 self.disable(channel)
             if message['event'] == "channel.on":
                 self.enable(channel)
+            self.broadcast()
 
         if message['event'] == 'channel.states':
-            ret = []
-            for item in self.relays:
-                state = item["pin"].value()
-                if state == item["enable"]:
-                    state = 1
-                else:
-                    state = 0
-                ret.append(state)
-            message = Message()
-            message.set(
-                {
-                    "event": "channels.response",
-                    "parameters": ret
-
-                }
-            )
-            broadcast(message)
+            self.broadcast()

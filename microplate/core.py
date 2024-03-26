@@ -40,7 +40,7 @@ def add_worker(worker):
 
 
 async def main():
-    print("starting main loop")
+    print("starting workers loop")
     while True:
         start = time.ticks_ms()
         for item in workers:
