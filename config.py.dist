@@ -1,0 +1,25 @@
+PIN_LED = 2
+TICK = 200
+PIN_LIGHT = 23
+PIN_PIR = 22
+PIN_DHT = 21
+RELAY = [
+    {"pin": 19, "enabled": 0, "default": 1},
+    {"pin": 18, "enabled": 0, "default": 0},
+]
+WIFI = [
+    ["ap_name1", "ap_pwd1"],
+    ["ap_name2", "ap_pwd2"]
+]
+WIFI_TIMEOUT = 10
+
+BTN_A = 17
+
+PORT = 5053
+ADDRESS = ("192.168.1.255", PORT)
+BROADCAST_IP = '0.0.0.0'
+
+STATICIV = "aaaaaaaaaaaaaaaa"
+IVKEY = "aaaaaaaaaaaaaaaa"
+DATAKEY = "aaaaaaaaaaaaaaaa"
+PASSPHRASE = "aaaaaaaaaaaaaaaa"
