@@ -1,35 +1,39 @@
 from config import *
 from node_config import *
-import microplate.wifi
-import socket
-
-microplate.wifi.wifi_connect()
-
-from microplate.message import Message
 from microplate.module import ModuleInterface
-from microplate.message_aes_sha1 import Cryptor
-import microplate.broadcast as broadcast
-from microplate.listener import Listener
 import time
 import uasyncio
 
-Message.node_name = NODE_NAME
-Message.add_decoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
-Message.add_encoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
+if WIFI is not None:
+    print("Initializing network")
+    import microplate.wifi
+    import socket
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-s.bind((BROADCAST_IP, PORT))
-s.setblocking(False)
+    microplate.wifi.wifi_connect()
 
-ModuleInterface.socket = s
-broadcast.socket = s
+    from microplate.message import Message
+    from microplate.listener import Listener
+    from microplate.message_aes_sha1 import Cryptor
+    import microplate.broadcast as broadcast
+    Message.node_name = NODE_NAME
+    Message.add_decoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
+    Message.add_encoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
 
-listener = Listener(s)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    s.bind((BROADCAST_IP, PORT))
+    s.setblocking(False)
+
+    ModuleInterface.socket = s
+    broadcast.socket = s
+    listener = Listener(s)
+
+else:
+    print("No network required")
+    listener = None
 
 workers = []
-
 
 def add_handler(name, handler):
     listener.add_handler(name, handler)
@@ -58,8 +62,7 @@ async def main():
 def start():
     l.run_forever()
 
-
 l = uasyncio.get_event_loop()
 l.create_task(main())
-l.create_task(listener.run())
-
+if listener:
+    l.create_task(listener.run())
