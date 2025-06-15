@@ -2,9 +2,23 @@ from microplate.handler_base import Handler
 from machine import Pin
 from microplate.message import Message
 from microplate.broadcast import broadcast
+from node_config import *
+from config import *
+from microplate.ha_base import HABase
 
+class RelayHandler(Handler, HABase):
+    ha_idx = 0
+    ha_component = {
+        'p': 'switch',
+        'unique_id': f"home-{NODE_NAME}-power0",
+        'state_topic': f"{HA_BASE_TOPIC}/{NODE_NAME}/power{ha_idx}/state",
+        'command_topic': f"{HA_BASE_TOPIC}/power{ha_idx}/command",
+        'payload_on': '1',
+        'payload_off': '0',
+        "value_template": "{{ value_json[0] }}",
+        "command_template": "[0, {{ value }}]",
+    }
 
-class RelayHandler(Handler):
     def __init__(self, relays):
         super().__init__()
         self.relays = []
@@ -21,6 +35,7 @@ class RelayHandler(Handler):
         if channel < len(self.relays):
             self.relays[channel]["pin"].value(state)
             self.relays[channel]["current"] = state
+            self.broadcast()
 
     def disable(self, channel):
         if channel < len(self.relays):

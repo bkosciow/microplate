@@ -15,6 +15,8 @@ WIFI_TIMEOUT = 10
 
 BTN_A = 17
 
+# set to False to disable IoT custom protocol
+USE_IOT_BROADCAST = True
 PORT = 5053
 ADDRESS = ("192.168.1.255", PORT)
 BROADCAST_IP = '0.0.0.0'
@@ -23,3 +25,12 @@ STATICIV = "aaaaaaaaaaaaaaaa"
 IVKEY = "aaaaaaaaaaaaaaaa"
 DATAKEY = "aaaaaaaaaaaaaaaa"
 PASSPHRASE = "aaaaaaaaaaaaaaaa"
+
+# set False to disable HA
+USE_HA = True
+HA_BASE_DISCOVERY_TOPIC = "homeassistant/device"
+HA_BASE_TOPIC = "home"
+MQTT_SERVER = "192.168.1.40"
+MQTT_PORT = 1883
+MQTT_USER = "login"
+MQTT_PWD = "pass"

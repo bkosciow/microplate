@@ -1,4 +1,4 @@
-Boilerplate for Micropython
+Boilerplate for Micropython for IoT devices
 
 [read more]
 https://koscis.wordpress.com/tag/microplate/
@@ -19,9 +19,12 @@ message is a json network packet, encrypted or not
 
 they are two config files:
 config.py - common things like network credential
-node_config.py - config only for this device, like node-mane
+node_config.py - config only for this device, like node name and id
 
 
+Works with custom IoT protocol or Home Assistant
+- to disable custom IoT set USE_IOT_BROADCAST to False
+- HomeAssistant - WiP
 
 [workers]
 dht11
