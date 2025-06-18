@@ -39,7 +39,9 @@ if WIFI is not None:
     if USE_HA:
         print("Initializing MQTT")
         from microplate.home_assistant import HomeAssistant
+        from microplate.ha_base import HABase
         home_assistant = HomeAssistant()
+        HABase.ha = home_assistant
 
 else:
     print("No network required")
@@ -52,12 +54,14 @@ def add_handler(name, handler):
         listener.add_handler(name, handler)
     else:
         print("Listener is not enabled")
-    if USE_HA:
-        home_assistant.add_handler(name, handler)
+    if USE_HA and isinstance(handler, HABase):
+        home_assistant.add(handler)
 
 
 def add_worker(worker):
     workers.append(worker)
+    if USE_HA and isinstance(worker, HABase):
+        home_assistant.add(worker)
 
 
 async def main():
