@@ -1,9 +1,14 @@
+from node_config import *
+from config import *
+
 
 class HABase:
     ha = None
     def __init__(self):
         self.ha_idx = 0
         self.ha_component = {}
+        self.base_topic =  f"{HA_BASE_TOPIC}/{NODE_NAME}"
+        self.base_id = f"{HA_BASE_TOPIC}-{NODE_NAME}"
 
     def get_ha_definition(self):
         return self.ha_component

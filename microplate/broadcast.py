@@ -4,7 +4,7 @@ socket = None
 
 
 def broadcast(message):
-    if socket:
+    if USE_IOT_BROADCAST:
         try:
             socket.sendto(message.bytes(), ADDRESS)
         except OSError as e:

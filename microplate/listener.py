@@ -2,6 +2,7 @@ from microplate.handler_base import Handler
 from microplate.handler_base import DecryptNotFound
 from microplate.message_factory import MessageFactory
 import uasyncio
+import sys
 
 
 class Listener:
@@ -39,9 +40,9 @@ class Listener:
             except OSError as e:
                 # if e.errno == 11:
                 await uasyncio.sleep(0)
-
             except Exception as e:
                 print(str(e))
+                sys.print_exception(e)
                 await uasyncio.sleep(0)
 
     def serve_message(self, message):

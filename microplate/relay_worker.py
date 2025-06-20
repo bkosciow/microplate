@@ -3,12 +3,10 @@ from machine import Pin
 from microplate.message import Message
 from microplate.broadcast import broadcast
 from microplate.ha_base import HABase
-from node_config import *
-from config import *
+
 
 
 class RelayWorker(ModuleInterface, HABase):
-
     def __init__(self, relays, tick=7000):
         ModuleInterface.__init__(self,None, tick)
         HABase.__init__(self)
@@ -25,12 +23,11 @@ class RelayWorker(ModuleInterface, HABase):
         self.initialized = True
 
     def action(self):
-        print("action relay")
         self.send_message()
+        if self.callback:
+            self.callback('send_action', self.get_statuses())
 
-    def send_message(self):
-        if not self.initialized:
-            return
+    def get_statuses(self):
         ret = []
         for item in self.relays:
             state = item["pin"].value()
@@ -39,6 +36,13 @@ class RelayWorker(ModuleInterface, HABase):
             else:
                 state = 0
             ret.append(state)
+
+        return ret
+
+    def send_message(self):
+        if not self.initialized:
+            return
+        ret = self.get_statuses()
         message = Message()
         message.set(
             {
@@ -47,7 +51,6 @@ class RelayWorker(ModuleInterface, HABase):
 
             }
         )
-        print(ret)
         broadcast(message)
         self.publish(ret)
 
@@ -66,13 +69,12 @@ class RelayWorker(ModuleInterface, HABase):
             self.toggle(channel, self.relays[channel]["enable"])
 
     def get_ha_definition(self):
-        # ha_component = {}
         for i in range(0, len(self.relays)):
-            self.ha_component[f"{HA_BASE_TOPIC}-{NODE_NAME}-power{self.ha_idx+i}"] = {
+            self.ha_component[f"{self.base_id}-power{self.ha_idx+i}"] = {
                 'p': 'switch',
-                'unique_id': f"{HA_BASE_TOPIC}-{NODE_NAME}-power{self.ha_idx+i}",
-                'state_topic': f"{HA_BASE_TOPIC}/{NODE_NAME}/power{self.ha_idx}/state",
-                'command_topic': f"{HA_BASE_TOPIC}/{NODE_NAME}/power{self.ha_idx}/command",
+                'unique_id': f"{self.base_id}-power{self.ha_idx+i}",
+                'state_topic': f"{self.base_topic}/power{self.ha_idx}/state",
+                'command_topic': f"{self.base_topic}/power{self.ha_idx}/command",
                 'payload_on': '1',
                 'payload_off': '0',
                 "value_template": "{{ value_json["+str(i)+"] }}",

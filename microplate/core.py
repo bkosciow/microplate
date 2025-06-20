@@ -54,15 +54,12 @@ def add_handler(name, handler):
         listener.add_handler(name, handler)
     else:
         print("Listener is not enabled")
-    if USE_HA and isinstance(handler, HABase):
-        home_assistant.add(handler)
+    if USE_HA:
+        home_assistant.add_handler(handler)
 
 
 def add_worker(worker):
     workers.append(worker)
-    if USE_HA and isinstance(worker, HABase):
-        home_assistant.add(worker)
-
 
 async def main():
     print("starting workers loop")
@@ -90,4 +87,6 @@ l = uasyncio.get_event_loop()
 l.create_task(main())
 if USE_IOT_BROADCAST:
     l.create_task(listener.run())
+if USE_HA:
+    l.create_task(home_assistant.run())
 

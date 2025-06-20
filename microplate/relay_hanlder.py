@@ -1,9 +1,10 @@
 from microplate.handler_base import Handler
 from node_config import *
 from config import *
+from microplate.home_assistant import HomeAssistantHandler
 
 
-class RelayHandler(Handler):
+class RelayHandler(Handler, HomeAssistantHandler):
     def __init__(self, relays):
         super().__init__(relays)
 
@@ -18,3 +19,10 @@ class RelayHandler(Handler):
 
         if message['event'] == 'channel.states':
             self.workers[0].send_message()
+
+    def handle_mqtt(self, topic, msg):
+        msg = self.get_dict(msg)
+        if msg[1] == 1:
+            self.workers[0].enable(msg[0])
+        else:
+            self.workers[0].disable(msg[0])
