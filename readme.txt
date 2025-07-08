@@ -1,4 +1,6 @@
 Boilerplate for Micropython for IoT devices
+Works with Home Assistant via MQTT
+
 
 [read more]
 https://koscis.wordpress.com/tag/microplate/
@@ -24,7 +26,22 @@ node_config.py - config only for this device, like node name and id
 
 Works with custom IoT protocol or Home Assistant
 - to disable custom IoT set USE_IOT_BROADCAST to False
-- HomeAssistant - WiP
+- HomeAssistant - integration via MQTT
+
+
+Home Assistant config (config.py):
+
+# set False to disable HA
+USE_HA = True
+HA_BASE_DISCOVERY_TOPIC = "homeassistant/device"
+HA_BASE_TOPIC = "home"
+MQTT_SERVER = "192.168.1.40"
+MQTT_PORT = 1883
+MQTT_USER = "login"
+MQTT_PWD = "pass"
+
+
+
 
 [workers]
 dht11
