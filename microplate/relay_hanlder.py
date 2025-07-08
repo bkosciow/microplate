@@ -1,6 +1,4 @@
 from microplate.handler_base import Handler
-from node_config import *
-from config import *
 from microplate.home_assistant import HomeAssistantHandler
 
 

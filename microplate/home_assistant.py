@@ -22,7 +22,9 @@ class HomeAssistant:
         self.client = MQTTClient(NODE_ID, MQTT_SERVER, user=MQTT_USER, password=MQTT_PWD, port=MQTT_PORT)
         self.client.set_callback(self.callback)
         self.client.connect()
-        self.handlers = {}
+        self.handlers = {
+            'none': []
+        }
 
     def add_handler(self, handler):
         if not isinstance(handler, HomeAssistantHandler):
@@ -41,6 +43,11 @@ class HomeAssistant:
                     print("sub to:", topic)
                     self.handlers[topic].append(handler)
                     self.client.subscribe(topic)
+            else:
+                topic = 'none'
+                if handler not in self.handlers[topic]:
+                    print("sub to:", topic)
+                    self.handlers[topic].append(handler)
 
     def discovery_packet(self):
         packet = {
@@ -67,7 +74,7 @@ class HomeAssistant:
         if isinstance(packet, dict) or isinstance(packet, list):
             packet = json.dumps(packet)
 
-        print("sending to: ", topic)
+        print("sending to: ", topic, packet, self.client)
         self.client.publish(topic, packet, retain=persist)
 
     def callback(self, topic, msg):
