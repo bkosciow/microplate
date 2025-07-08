@@ -28,9 +28,8 @@ class DHT11Worker(ModuleInterface, HABase):
             'unit_of_measurement': "%",
             'value_template': "{{ value_json.humi }}",
             'unique_id': f"{self.base_id}-humidity{self.ha_idx}",
-            'state_topic': f"{self.base_topic}/humidity{self.ha_idx}/state",
+            'state_topic': f"{self.base_topic}/temperature{self.ha_idx}/state",
         }
-
 
     def action(self):
         self.io.measure()

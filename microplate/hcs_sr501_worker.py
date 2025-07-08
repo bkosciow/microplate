@@ -2,6 +2,7 @@ from microplate.module import  ModuleInterface
 from machine import Pin
 from microplate.message import Message
 from microplate.broadcast import broadcast
+from microplate.ha_base import HABase
 
 #
 # def debug_callback(name, data):
@@ -11,11 +12,20 @@ from microplate.broadcast import broadcast
 #
 
 
-class MoveWorker(ModuleInterface):
+class MoveWorker(ModuleInterface, HABase):
     def __init__(self, pin, tick=200, tick1=10000):
-        super().__init__(Pin(pin, Pin.IN), tick)
+        ModuleInterface.__init__(self, Pin(pin, Pin.IN), tick)
+        HABase.__init__(self)
         self.move = None
         self.add_action(tick1, self.send_action)
+        self.ha_component[f"{self.base_id}-motion{self.ha_idx}"] = {
+            'p': 'binary_sensor',
+            'device_class': 'motion',
+            'unique_id': f"{self.base_id}-motion{self.ha_idx}",
+            'state_topic': f"{self.base_topic}/motion{self.ha_idx}/state",
+            'payload_on': True,
+            'payload_off': False,
+        }
         
     def action(self):
         self.data = self.io.value()
@@ -38,3 +48,4 @@ class MoveWorker(ModuleInterface):
             }
         )
         broadcast(message)
+        self.publish("True" if self.data == 1 else "False")
