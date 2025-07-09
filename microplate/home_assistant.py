@@ -75,7 +75,7 @@ class HomeAssistant:
             packet = json.dumps(packet)
 
         print("sending to: ", topic, packet, self.client)
-        self.client.publish(topic, packet, retain=persist)
+        self.client.publish(topic, packet.encode('utf8'), retain=persist)
 
     def callback(self, topic, msg):
         topic = topic.decode('utf8')

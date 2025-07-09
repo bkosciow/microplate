@@ -17,7 +17,7 @@ class DHT11Worker(ModuleInterface, HABase):
         self.ha_component[f"{self.base_id}-temperature{self.ha_idx}"] = {
             'p': 'sensor',
             'device_class': 'temperature',
-            'unit_of_measurement': "C",
+            'unit_of_measurement': "°C",
             'value_template': "{{ value_json.temp }}",
             'unique_id': f"{self.base_id}-temperature{self.ha_idx}",
             'state_topic': f"{self.base_topic}/temperature{self.ha_idx}/state",
