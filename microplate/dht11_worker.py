@@ -11,7 +11,7 @@ from microplate.ha_base import HABase
 
 
 class DHT11Worker(ModuleInterface, HABase):
-    def __init__(self, pin, tick=2000):
+    def __init__(self, pin, tick=10000):
         ModuleInterface.__init__(self,dht.DHT11(Pin(pin)), tick)
         HABase.__init__(self)
         self.ha_component[f"{self.base_id}-temperature{self.ha_idx}"] = {

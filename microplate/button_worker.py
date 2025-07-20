@@ -1,8 +1,10 @@
 from machine import Pin
+from microplate.ha_base import HABase
 
 
-class ButtonWorker:
+class ButtonWorker(HABase):
     def __init__(self):
+        HABase.__init__(self)
         self.btns = []
 
     def add_button(self, pin, tick, callback):
@@ -17,3 +19,20 @@ class ButtonWorker:
                 if item["counter"] >= item["tick"]:
                     item["counter"] = 0
                     item["callback"](item["id"])
+
+    def click(self, idx):
+        if idx < len(self.btns):
+            item = self.btns[idx]
+            item["callback"](item["id"])
+
+    def get_ha_definition(self):
+        for i in range(0, len(self.btns)):
+            self.ha_component[f"{self.base_id}-button{self.ha_idx+i}"] = {
+                'p': 'button',
+                'unique_id': f"{self.base_id}-button{self.ha_idx+i}",
+                'command_topic': f"{self.base_topic}/button{self.ha_idx}/command",
+                'payload_on': '1',
+                "command_template": "["+str(i)+"]",
+            }
+
+        return self.ha_component

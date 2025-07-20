@@ -9,7 +9,7 @@ from microplate.relay_hanlder import RelayHandler
 from microplate.dht11_handler import Dht11Handler
 from microplate.light_handler import LightHandler
 from microplate.hcs_sr501_handler import MoveHandler
-# from microplate.button_worker import ButtonWorker
+from microplate.button_worker import ButtonWorker
 # from microplate.debug_handler import DebugHandler
 from microplate.network_worker import NetworkWorker
 
@@ -17,17 +17,22 @@ print("booting")
 
 def click_callback(pin):
     print("pin : ", pin)
+    s = relay_worker.get_statuses()
+    if s[0] == 1:
+        relay_worker.disable(0)
+    else:
+        relay_worker.enable(0)
 
 
 light = LightWorker(PIN_LIGHT)
 pir = MoveWorker(PIN_PIR)
 temp = DHT11Worker(PIN_DHT, 3000)
 relay_worker = RelayWorker(RELAY)
-# btns = ButtonWorker()
-# btns.add_button(BTN_A, 400, click_callback)
+btns = ButtonWorker()
+btns.add_button(BTN_A, 400, click_callback)
 net = NetworkWorker()
 
-# core.add_worker(btns)
+core.add_worker(btns)
 core.add_worker(light)
 core.add_worker(pir)
 core.add_worker(temp)
