@@ -1,19 +1,28 @@
-PIN_LED = 2
+# main loop delay
 TICK = 200
+
+# defined pins
+BTN_A = 17
+PIN_LED = 2
 PIN_LIGHT = 23
 PIN_PIR = 22
 PIN_DHT = 21
+
+# enabled = 0 - ground enable relay
+# enabled = 1 - +3v enable relay
+# default - signal after boot
 RELAY = [
     {"pin": 19, "enabled": 0, "default": 1},
     {"pin": 18, "enabled": 0, "default": 0},
 ]
+
+
+# wifi access points, None for no network
 WIFI = [
     ["ap_name1", "ap_pwd1"],
     ["ap_name2", "ap_pwd2"]
 ]
-WIFI_TIMEOUT = 10
-
-BTN_A = 17
+WIFI_TIMEOUT = 3
 
 # set to False to disable IoT custom protocol
 USE_IOT_BROADCAST = True
