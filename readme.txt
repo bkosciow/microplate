@@ -3,6 +3,7 @@ Works with Home Assistant via MQTT
 
 
 [read more]
+https://koscis.wordpress.com/project/microplate-how-to-use/
 https://koscis.wordpress.com/tag/microplate/
 
 
@@ -41,8 +42,6 @@ MQTT_USER = "login"
 MQTT_PWD = "pass"
 
 
-
-
 [workers]
 dht11
 light
@@ -55,4 +54,5 @@ relay
 dht11
 pir
 light
+button
 

@@ -26,7 +26,7 @@ def click_callback(pin):
 
 light = LightWorker(PIN_LIGHT)
 pir = MoveWorker(PIN_PIR)
-temp = DHT11Worker(PIN_DHT, 3000)
+temp = DHT11Worker(PIN_DHT)
 relay_worker = RelayWorker(RELAY)
 btns = ButtonWorker()
 btns.add_button(BTN_A, 400, click_callback)
@@ -39,9 +39,7 @@ core.add_worker(temp)
 core.add_worker(net)
 core.add_worker(relay_worker)
 
-r = RelayHandler(relay_worker)
-
-core.add_handler("relay", r)
+core.add_handler("relay", RelayHandler(relay_worker))
 core.add_handler("dht11", Dht11Handler(temp))
 core.add_handler("light", LightHandler(light))
 core.add_handler("move", MoveHandler(pir))
