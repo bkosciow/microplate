@@ -13,7 +13,7 @@ class RelayHandler(Handler, HomeAssistantHandler):
                 self.workers[0].disable(channel)
             if message['event'] == "channel.on":
                 self.workers[0].enable(channel)
-            self.workers[0].send_message()
+            # self.workers[0].send_action()
 
         if message['event'] == 'channel.states':
             self.workers[0].send_message()

@@ -25,7 +25,7 @@ class RelayWorker(ModuleInterface, HABase):
     def action(self):
         self.send_message()
         if self.callback:
-            self.callback('send_action', self.get_statuses())
+            self.callback('action', self.get_statuses())
 
     def get_statuses(self):
         ret = []
@@ -59,6 +59,8 @@ class RelayWorker(ModuleInterface, HABase):
             self.relays[channel]["pin"].value(state)
             self.relays[channel]["current"] = state
             self.send_message()
+            if self.callback:
+                self.callback('send_action', self.get_statuses())
 
     def disable(self, channel):
         if channel < len(self.relays):
