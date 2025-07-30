@@ -1,3 +1,9 @@
+#
+# displays data on lcd and broadcasts it
+# callbacks displays data
+# setting tick1 for constructor starts
+
+
 from config import *
 import microplate.core as core
 
@@ -49,7 +55,9 @@ def relay_callback(action, value):
 
 # workers
 net = NetworkWorker()
-lcd_worker = HD44780Worker()
+
+# setting tick1 enables broadcasting oin change and each n microseconds
+lcd_worker = HD44780Worker(tick1=10000)
 light = LightWorker(PIN_LIGHT)
 light.callback = light_callback
 pir = MoveWorker(PIN_PIR)

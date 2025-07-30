@@ -17,6 +17,7 @@ class HomeAssistantHandler:
 
 class HomeAssistant:
     def __init__(self):
+        self.debug = False
         self.work = True
         self.client_id = ubinascii.hexlify(machine.unique_id())
         self.client = MQTTClient(NODE_ID, MQTT_SERVER, user=MQTT_USER, password=MQTT_PWD, port=MQTT_PORT)
@@ -74,7 +75,8 @@ class HomeAssistant:
         if isinstance(packet, dict) or isinstance(packet, list):
             packet = json.dumps(packet)
 
-        print("sending to: ", topic, packet, self.client)
+        if self.debug:
+            print("sending to: ", topic, packet, self.client)
         self.client.publish(topic, packet.encode('utf8'), retain=persist)
 
     def callback(self, topic, msg):
