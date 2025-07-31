@@ -1,20 +1,17 @@
 import ubinascii
 import json
 import machine
+from node_config import  *
 
 
 class Message(object):
     protocol = "iot:1"
-    chip_id = None
     node_name = None
     encoders = []
     decoders = {}
     drop_unencrypted = False
 
     def __init__(self):
-        if self.chip_id is None:
-            self.chip_id = ubinascii.hexlify(machine.unique_id()).decode('utf8')
-
         self.data = None
         self.encoder = 0
 
@@ -30,7 +27,7 @@ class Message(object):
         self.data = {
             'protocol': self.protocol,
             'node': self.node_name,
-            'chip_id': self.chip_id,
+            'node_id': NODE_ID,
             'event': '',
             'parameters': {},
             'response': '',
