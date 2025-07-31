@@ -6,6 +6,7 @@ from node_config import  *
 
 class Message(object):
     protocol = "iot:1"
+    node_id = None
     node_name = None
     encoders = []
     decoders = {}
@@ -27,7 +28,7 @@ class Message(object):
         self.data = {
             'protocol': self.protocol,
             'node': self.node_name,
-            'node_id': NODE_ID,
+            'node_id': self.node_id,
             'event': '',
             'parameters': {},
             'response': '',

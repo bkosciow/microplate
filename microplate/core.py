@@ -21,6 +21,7 @@ if WIFI is not None:
         from microplate.message_aes_sha1 import Cryptor
         import microplate.broadcast as broadcast
         Message.node_name = NODE_NAME
+        Message.node_id = NODE_ID
         Message.add_decoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
         Message.add_encoder(Cryptor(STATICIV, IVKEY, DATAKEY, PASSPHRASE))
 
