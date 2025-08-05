@@ -28,7 +28,7 @@ class Message(object):
         self.data = {
             'protocol': self.protocol,
             'node': self.node_name,
-            'node_id': self.node_id,
+            'chip_id': self.node_id,
             'event': '',
             'parameters': {},
             'response': '',
