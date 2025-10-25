@@ -11,6 +11,7 @@ import uhashlib
 class SystemHandler(Handler):
     def __init__(self,):
         super().__init__()
+        self.busy = False
 
     def handle(self, message):
         if message["event"] == "system.ping":
@@ -41,28 +42,34 @@ class SystemHandler(Handler):
             broadcast(message)
 
         if message["event"] == "system.microplate.get_hash":
-            directory = "/microplate"
-            hashes = self.calculate_hash(directory)
-            message = Message()
-            message.set(
-                {
-                    "event": "system.microplate.hash",
-                    "parameters": hashes,
-                }
-            )
-            broadcast(message)
+            if not self.busy:
+                self.busy = True
+                directory = "/microplate"
+                hashes = self.calculate_hash(directory)
+                message = Message()
+                message.set(
+                    {
+                        "event": "system.microplate.hash",
+                        "parameters": hashes,
+                    }
+                )
+                broadcast(message)
+                self.busy = False
 
         if message["event"] == "system.userspace.get_hash":
-            directory = "/"
-            hashes = self.calculate_hash(directory)
-            message = Message()
-            message.set(
-                {
-                    "event": "system.userspace.hash",
-                    "parameters": hashes,
-                }
-            )
-            broadcast(message)
+            if not self.busy:
+                self.busy = True
+                directory = "/"
+                hashes = self.calculate_hash(directory)
+                message = Message()
+                message.set(
+                    {
+                        "event": "system.userspace.hash",
+                        "parameters": hashes,
+                    }
+                )
+                broadcast(message)
+                self.busy = False
 
     def calculate_hash(self, directory):
         hashes = {}

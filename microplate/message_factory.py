@@ -23,6 +23,7 @@ class MessageFactory(object):
 
             return msg
         except ValueError:
+            print(message)
             raise
 
     @classmethod

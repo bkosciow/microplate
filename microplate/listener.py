@@ -6,7 +6,7 @@ import sys
 
 
 class Listener:
-    def __init__(self, socket, buffer_size=1024):
+    def __init__(self, socket, buffer_size=2048):
         self.socket = socket
         self.buffer_size = buffer_size
         self.handlers = {}

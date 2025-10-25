@@ -3,9 +3,11 @@ from node_config import *
 from microplate.module import ModuleInterface
 import time
 import uasyncio
+import os
 
 listener = None
 home_assistant = None
+
 
 if WIFI is not None:
     print("Initializing network")
@@ -13,6 +15,13 @@ if WIFI is not None:
     import socket
 
     microplate.wifi.wifi_connect()
+    try:
+        os.stat("/.upgrade.json")
+        print("Starting an upgrade")
+        import microplate.upgrade
+    except OSError as e:
+        if e.args[0] != 2:
+            raise
 
     if USE_IOT_BROADCAST:
         print("Initializing IoTv1")
