@@ -1,4 +1,5 @@
 from microplate.handler_base import Handler
+from microplate.handler_base import EventOnStart
 from microplate.broadcast import broadcast
 from microplate.message import Message
 import os
@@ -8,7 +9,7 @@ from microplate.wifi import wlan
 import uhashlib
 
 
-class SystemHandler(Handler):
+class SystemHandler(Handler, EventOnStart):
     def __init__(self,):
         super().__init__()
         self.busy = False
@@ -42,34 +43,40 @@ class SystemHandler(Handler):
             broadcast(message)
 
         if message["event"] == "system.microplate.get_hash":
-            if not self.busy:
-                self.busy = True
-                directory = "/microplate"
-                hashes = self.calculate_hash(directory)
-                message = Message()
-                message.set(
-                    {
-                        "event": "system.microplate.hash",
-                        "parameters": hashes,
-                    }
-                )
-                broadcast(message)
-                self.busy = False
+            self.microplate_hashes()
 
         if message["event"] == "system.userspace.get_hash":
-            if not self.busy:
-                self.busy = True
-                directory = "/"
-                hashes = self.calculate_hash(directory)
-                message = Message()
-                message.set(
-                    {
-                        "event": "system.userspace.hash",
-                        "parameters": hashes,
-                    }
-                )
-                broadcast(message)
-                self.busy = False
+            self.userspace_hashes()
+
+    def microplate_hashes(self):
+        if not self.busy:
+            self.busy = True
+            directory = "/microplate"
+            hashes = self.calculate_hash(directory)
+            message = Message()
+            message.set(
+                {
+                    "event": "system.microplate.hash",
+                    "parameters": hashes,
+                }
+            )
+            broadcast(message)
+            self.busy = False
+
+    def userspace_hashes(self):
+        if not self.busy:
+            self.busy = True
+            directory = "/"
+            hashes = self.calculate_hash(directory)
+            message = Message()
+            message.set(
+                {
+                    "event": "system.userspace.hash",
+                    "parameters": hashes,
+                }
+            )
+            broadcast(message)
+            self.busy = False
 
     def calculate_hash(self, directory):
         hashes = {}
@@ -92,3 +99,7 @@ class SystemHandler(Handler):
             hashes['error'] = f"An unexpected error occurred with file {filepath}: {e}"
 
         return hashes
+
+    def on_start(self):
+        self.userspace_hashes()
+        self.microplate_hashes()

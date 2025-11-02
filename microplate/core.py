@@ -4,6 +4,7 @@ from microplate.module import ModuleInterface
 import time
 import uasyncio
 import os
+from microplate.handler_base import EventOnStart
 
 listener = None
 home_assistant = None
@@ -91,6 +92,13 @@ def start():
     if USE_HA:
         discovery_packet = home_assistant.discovery_packet()
         print(discovery_packet)
+
+    print(" -- On start --")
+    for handlers in listener.handlers:
+        for handler in listener.handlers[handlers]:
+            if isinstance(handler, EventOnStart):
+                handler.on_start()
+    print(" -- done --")
     l.run_forever()
 
 l = uasyncio.get_event_loop()
@@ -99,4 +107,3 @@ if USE_IOT_BROADCAST:
     l.create_task(listener.run())
 if USE_HA:
     l.create_task(home_assistant.run())
-

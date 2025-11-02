@@ -73,9 +73,10 @@ def download_file(url, filename):
         return False
 
 params = get_params()
+# print(params)
 ensure_tmp_dir_exists(temp_dir)
 base_url = params['base_url']
-
+# os.remove(filename)
 crc_ok = True
 for file in params['files']:
     url = base_url +"/get/"+  file
@@ -102,10 +103,9 @@ for file in params['files']:
         crc_ok = False
         break
 
-
 if crc_ok:
     target = None
-    if params['type'] == "userfiles":
+    if params['type'] == "userspace":
         print("Files OK - replacing userspace files")
         target = "/"
 

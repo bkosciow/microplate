@@ -17,3 +17,8 @@ class DecryptNotFound(Exception):
 
 class NoDecodersDefined(Exception):
     pass
+
+
+class EventOnStart:
+    def on_start(self):
+        raise NotImplementedError("EventOnStart not implemented")

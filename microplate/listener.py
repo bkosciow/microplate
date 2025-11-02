@@ -24,6 +24,9 @@ class Listener:
     def get_handler(self, name):
         return self.handlers[name]
 
+    def has_handler(self, name):
+        return name in self.handlers
+
     async def run(self):
         """server loop"""
         while self.work:

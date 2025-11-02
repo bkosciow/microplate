@@ -9,11 +9,10 @@ class UpgradeHandler(Handler):
         super().__init__()
 
     def handle(self, message):
-        if message['event'] == "system.userspace.upgrade":
+        if message['event'] == "system.files.upgrade":
             print(message['parameters'])
             with open("/.upgrade.json", 'w') as f:
                 json.dump(message['parameters'], f)
             time.sleep(3)
             print("Rebooting for the upgrade")
             machine.reset()
-
