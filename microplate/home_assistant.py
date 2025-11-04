@@ -71,13 +71,29 @@ class HomeAssistant:
         self.publish(f"{HA_BASE_DISCOVERY_TOPIC}/{NODE_NAME}/config", packet, True)
         return packet
 
+    def reconnect(self):
+        print("Reconnecting to MQTT broker...")
+        try:
+            self.client.disconnect()
+        except:
+            pass
+        self.client.connect()
+        print("Successfully reconnected")
+
     def publish(self, topic, packet, persist):
         if isinstance(packet, dict) or isinstance(packet, list):
             packet = json.dumps(packet)
 
-        if self.debug:
-            print("sending to: ", topic, packet, self.client)
-        self.client.publish(topic, packet.encode('utf8'), retain=persist)
+        try:
+            if self.debug:
+                print("sending to: ", topic, packet, self.client)
+            self.client.publish(topic, packet.encode('utf8'), retain=persist)
+        except OSError as e:
+            if e.errno == 128:
+                print("MQTT conn lost!")
+                self.reconnect()
+            else:
+                raise e
 
     def callback(self, topic, msg):
         topic = topic.decode('utf8')

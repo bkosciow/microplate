@@ -41,6 +41,7 @@ class SystemHandler(Handler, EventOnStart):
                 }
             )
             broadcast(message)
+            print("system.ping")
 
         if message["event"] == "system.microplate.get_hash":
             self.microplate_hashes()
@@ -62,6 +63,7 @@ class SystemHandler(Handler, EventOnStart):
             )
             broadcast(message)
             self.busy = False
+            print(hashes)
 
     def userspace_hashes(self):
         if not self.busy:
